@@ -1,0 +1,49 @@
+Ah, that's the key piece of information! The error message now clarifies that running scripts is disabled on your system's PowerShell execution policy. This security setting prevents potentially malicious scripts from running.
+
+There are two ways to address this, but it's important to choose the approach that balances security with your needs:
+
+**Option 1: Temporarily Allow Script Execution (Less Secure)**
+
+1. **Open PowerShell as Administrator:** Right-click on the Windows PowerShell icon and select "Run as administrator."
+2. **Set Execution Policy (Temporary):** Type the following command and press Enter:
+
+   ```powershell
+   Set-ExecutionPolicy Bypass -Scope CurrentUser
+   ```
+
+   This temporarily allows script execution for the current user session only. Once you close the PowerShell window, the policy will revert back to its previous setting.
+
+3. **Activate the Virtual Environment:** Now that script execution is allowed, run the activation script again:
+
+   ```powershell
+   .\Scripts\activate.ps1
+   ```
+
+This will hopefully activate your virtual environment. However, keep in mind that this approach is less secure as it allows any script to run in your current session.
+
+**Option 2: Allow Remote Signed Scripts (More Secure)**
+
+1. **Change Execution Policy (Persistent):** Open PowerShell as administrator (same as in Option 1) and type the following command:
+
+   ```powershell
+   Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+   ```
+
+   This allows scripts signed by a trusted publisher to run, while still restricting unsigned scripts. You might need to restart PowerShell after this change.
+
+2. **Verify Script Signature (Optional):** While not always the case, virtual environment activation scripts are sometimes signed. You can check the script's signature by right-clicking on `.\Scripts\activate.ps1` and selecting "Properties." Look for a "Digital Signatures" tab.
+
+3. **Activate the Virtual Environment:** If the script is signed, you can now activate the virtual environment without further issues:
+
+   ```powershell
+   .\Scripts\activate.ps1
+   ```
+
+**Recommendation:**
+
+- If security is not a major concern in your development environment, Option 1 might be quicker. However, for a more secure setup, consider Option 2.
+- Remember that changing the execution policy should be done cautiously, especially on production machines.
+
+Once your virtual environment is activated, you should see the virtual environment name prefixed to your command prompt (e.g., `.venv`). You can then proceed to install `scikit-learn` and run your Python script.
+
+If you encounter any further issues, feel free to provide more details!

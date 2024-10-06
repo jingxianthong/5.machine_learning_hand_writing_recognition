@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Web site created using create-react-app" />
+    <link rel="apple-touch-icon" href="/logo192.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <title>React App</title>
+    <link href="/static/css/main.eeeddbdb.chunk.css" rel="stylesheet" />
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root">
+      <h1>Upload an Image to Predict a Digit</h1>
+      <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" id="imageInput" accept="image/*" />
+        <br /><br />
+        <button type="button" onclick="uploadImage()">Upload Image</button>
+      </form>
+
+      <p id="result"></p>
+
+      <script>
+        function uploadImage() {
+          const fileInput = document.getElementById('imageInput');
+          const file = fileInput.files[0];
+          if (!file) {
+            alert("Please select an image file.");
+            return;
+          }
+
+          const reader = new FileReader();
+          reader.onloadend = function () {
+            const imageDataUri = reader.result;
+
+            fetch('/api/predict', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ image: imageDataUri }),
+            })
+              .then((response) => response.text())
+              .then((result) => {
+                document.getElementById('result').innerText = 'Prediction: ' + result;
+              })
+              .catch((error) => console.error('Error:', error));
+          };
+
+          reader.readAsDataURL(file);
+        }
+      </script>
+    </div>
+    <script src="/static/js/2.a743e28b.chunk.js"></script>
+    <script src="/static/js/main.8d752882.chunk.js"></script>
+  </body>
+</html>
